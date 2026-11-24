@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raymond Ghee C. Silayan — Systems Architect & IoT Developer</title>
+  <style>
+    :root {
+      --bg-void: #03050a;
+      --bg-card: rgba(11, 17, 34, 0.78);
+      --cyan: #00f5d4;
+      --violet: #9d4edd;
+      --magenta: #f72585;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text);
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    #cosmos-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(110px);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .nebula-1 {
+      width: 420px;
+      height: 420px;
+      background: var(--violet);
+      top: -100px;
+      left: -100px;
+    }
+
+    .nebula-2 {
+      width: 460px;
+      height: 460px;
+      background: var(--cyan);
+      bottom: -140px;
+      right: -120px;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(3, 5, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 245, 212, 0.2);
+    }
+
+    .nav-wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 15px;
+      color: #fff;
+    }
+
+    .brand span {
+      color: var(--cyan);
+    }
+
+    .dot-pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+      animation: pulse 1.6s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(0.85); opacity: 0.5; }
+      to { transform: scale(1.2); opacity: 1; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      font-family: monospace;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: var(--cyan);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    button, .btn-link {
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      display: inline-block;
+    }
+
+    .btn-ghost {
+      background: rgba(157, 78, 221, 0.18);
+      color: #fff;
+      border: 1px solid rgba(157, 78, 221, 0.6);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(157, 78, 221, 0.35);
+    }
+
+    .btn-cyan {
+      background: var(--cyan);
+      color: #03050a;
+      border: 1px solid var(--cyan);
+    }
+
+    .btn-cyan:hover {
+      box-shadow: 0 0 18px rgba(0, 245, 212, 0.65);
+      transform: translateY(-1px);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 20px 90px;
+    }
+
+    section {
+      margin-top: 72px;
+    }
+
+    /* Hero */
+    .hero {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 36px;
+      align-items: center;
+      min-height: 68vh;
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero-meta, .nav-links {
+        justify-content: center;
+      }
+      .orbital-box {
+        margin: 0 auto;
+      }
+    }
+
+    .status-pill {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      background: rgba(0, 245, 212, 0.1);
+      border: 1px solid rgba(0, 245, 212, 0.35);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, var(--cyan), #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .type-line {
+      font-family: monospace;
+      font-size: 17px;
+      color: var(--cyan);
+      min-height: 28px;
+      margin-bottom: 16px;
+    }
+
+    .bio {
+      color: var(--text);
+      font-size: 16px;
+      max-width: 640px;
+      margin-bottom: 20px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .chip {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 245, 212, 0.22);
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .chip.email {
+      color: var(--cyan);
+    }
+
+    /* Orbital Core */
+    .orbital-box {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .ring-outer {
+      inset: 0;
+      border: 1px dashed rgba(0, 245, 212, 0.45);
+      animation: rotCW 20s linear infinite;
+    }
+
+    .ring-inner {
+      inset: 22px;
+      border: 2px solid rgba(157, 78, 221, 0.45);
+      border-top-color: var(--cyan);
+      border-bottom-color: var(--magenta);
+      animation: rotCCW 12s linear infinite;
+    }
+
+    .core-center {
+      width: 156px;
+      height: 156px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(0, 245, 212, 0.22), rgba(157, 78, 221, 0.15), #070b17);
+      border: 1px solid rgba(0, 245, 212, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 0 35px rgba(0, 245, 212, 0.2);
+    }
+
+    .core-center .big {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+
+    .core-center .sub {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+
+    @keyframes rotCW {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rotCCW {
+      to { transform: rotate(-360deg); }
+    }
+
+    /* Section Headers & Filter Tabs */
+    .sec-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-bottom: 1px solid rgba(0, 245, 212, 0.2);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+    }
+
+    .sec-kicker {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .tab-btn.active {
+      background: var(--cyan);
+      color: #03050a;
+      border-color: var(--cyan);
+    }
+
+    /* Grids & Cards */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 245, 212, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--cyan);
+      box-shadow: 0 12px 28px rgba(0, 245, 212, 0.14);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-family: monospace;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: rgba(0, 245, 212, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 245, 212, 0.3);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 6px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      border-radius: 999px;
+      transition: width 1.1s ease;
+    }
+
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .bar-meta span:last-child {
+      color: var(--cyan);
+    }
+
+    .card-footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      cursor: pointer;
+    }
+
+    /* Timeline */
+    .timeline {
+      border-left: 2px solid rgba(0, 245, 212, 0.4);
+      padding-left: 20px;
+      margin-left: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .tl-item {
+      position: relative;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    .tl-date {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .p-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .p-box strong {
+      display: block;
+      color: var(--cyan);
+      margin-bottom: 4px;
+    }
+
+    .cta-strip {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(0, 245, 212, 0.12), rgba(157, 78, 221, 0.14));
+      border: 1px solid rgba(0, 245, 212, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 4, 10, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 540px;
+      background: #0b1122;
+      border: 1px solid rgba(0, 245, 212, 0.4);
+      border-radius: 14px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      display: block;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 245, 212, 0.3);
+      background: #050811;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .spec-box {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(0, 245, 212, 0.2);
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .spec-box ul {
+      margin-top: 8px;
+      padding-left: 18px;
+      color: var(--text);
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      #cosmos-canvas, .nebula, .no-print, .orbital-box { display: none !important; }
+      .card { background: #fff; color: #000; border: 1px solid #ccc; box-shadow: none; }
+      .card h3, h2, h1 { color: #000; -webkit-text-fill-color: #000; }
+      .card p, .bio { color: #222; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="cosmos-canvas"></canvas>
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+
+  <header class="no-print">
+    <div class="nav-wrap">
+      <div class="brand">
+        <span class="dot-pulse"></span>
+        <div>KEEOH<span>00</span> // SYS.ARC</div>
+      </div>
+      <nav class="nav-links">
+        <a href="#about">01. Profile</a>
+        <a href="#skills">02. Tech Matrix</a>
+        <a href="#projects">03. Systems</a>
+        <a href="#education">04. Trajectory</a>
+      </nav>
+      <div class="btn-group">
+        <button class="btn-ghost" onclick="toggleEditModal()">[ EDIT HUD ]</button>
+        <button class="btn-cyan" onclick="window.print()">EXPORT PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="about" class="hero">
+      <div>
+        <div class="status-pill">STATUS: ONLINE • BSIS 4-1 // ENTERPRISE SYSTEMS</div>
+        <h1 id="display-name">RAYMOND GHEE C. SILAYAN</h1>
+        <div class="type-line">&gt; <span id="typewriter"></span></div>
+        <p id="display-bio" class="bio">
+          Systems-oriented Information Systems builder specializing in <strong>Enterprise Resource Planning (ERP)</strong>, <strong>3-Tier System Architecture</strong>, and real-time <strong>ESP32 + Firebase IoT ecosystems</strong>. Engineering clean, scalable digital and hardware infrastructures.
+        </p>
+        <div class="hero-meta">
+          <span id="display-location" class="chip">📍 Binangonan, Rizal, PH</span>
+          <a id="display-email" href="mailto:raymond.silayan@example.com" class="chip email">✉️ raymond.silayan@example.com</a>
+          <span class="chip">🛰️ @keeoh00</span>
+        </div>
+      </div>
+
+      <div class="orbital-box">
+        <div class="ring ring-outer"></div>
+        <div class="ring ring-inner"></div>
+        <div class="core-center">
+          <div class="sub">SYSTEM CORE</div>
+          <div class="big">BSIS</div>
+          <div class="sub">ARCH &amp; IoT</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker">// 02. CAPABILITY MATRIX</div>
+          <h2>TECHNICAL ARSENAL</h2>
+        </div>
+        <div class="tabs no-print">
+          <button class="tab-btn active" data-cat="all" onclick="filterSkills('all')">ALL SYSTEMS</button>
+          <button class="tab-btn" data-cat="enterprise" onclick="filterSkills('enterprise')">ERP &amp; ARCH</button>
+          <button class="tab-btn" data-cat="iot" onclick="filterSkills('iot')">IoT &amp; HARDWARE</button>
+          <button class="tab-btn" data-cat="web" onclick="filterSkills('web')">WEB &amp; CLOUD</button>
+        </div>
+      </div>
+      <div id="skills-grid" class="grid-3"></div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="sec-head">
+        <div>
+          <div class="sec-kicker" style="color: var(--magenta);">// 03. DEPLOYED ARCHITECTURES</div>
+          <h2>FEATURED SYSTEMS &amp; PROTOTYPES</h2>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-top">
+            <span style="color: var(--cyan);">SYS-01 // IoT HARDWARE</span>
+            <span class="badge">ESP32 + FIREBASE</span>
+          </div>
+          <h3>IoT Smart Pet Feeder &amp; Water Dispenser</h3>
+          <p>Automated feeding schedule controller with real-time water-level percentage telemetry synced via Firebase cloud infrastructure.</p>
+          <div class="card-footer" onclick="openProjectModal(0)">
+            <span>INSPECT BLUEPRINT</span>
+            <span>→</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span style="color: #c084fc;">SYS-02 // ADMIN DASHBOARD</span>
+            <span class="badge">WEB PLATFORM</span>
+          </div>
+          <h3>TACHYONS Admin Control Interface</h3>
+          <p>Centralized browser command dashboard managing custom system sitemaps, dynamic voucher code engines, promotional pricing, and archive logs.</p>
+          <div class="card-footer" onclick="openProjectModal(1)">
+            <span>INSPECT BLUEPRINT</span>
+            <span>→</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span style="color: var(--magenta);">SYS-03 // ENTERPRISE ERP</span>
+            <span class="badge">3-TIER &amp; BPMN</span>
+          </div>
+          <h3>Healthcare Operational 3-Tier ERP Model</h3>
+          <p>Enterprise system architecture separating Presentation, Business Logic, and Database layers with BPMN 2.0 compliant workflow gateways.</p>
+          <div class="card-footer" onclick="openProjectModal(2)">
+            <span>INSPECT BLUEPRINT</span>
+            <span>→</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRAJECTORY -->
+    <section id="education" class="grid-2">
+      <div class="card">
+        <div class="sec-kicker">// 04. FLIGHT LOG</div>
+        <h2 style="margin-bottom: 18px;">ACADEMIC &amp; SYSTEM MILESTONES</h2>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-date">2023 — PRESENT // SECTION BSIS 4-1</div>
+            <h3>Bachelor of Science in Information Systems</h3>
+            <p>Focus on Enterprise Resource Planning (ERP Modules), Enterprise Architecture, Business Analytics, and Statistical Modeling.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">2026 // ENTERPRISE ARCHITECTURE</div>
+            <h3>3-Tier Healthcare ERP &amp; BPMN Modeling</h3>
+            <p>Designed end-to-end process notations, gateway logic, and multi-tier database topologies for operational systems.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">2026 // HARDWARE &amp; CLOUD INTEGRATION</div>
+            <h3>ESP32 Microcontroller &amp; Firebase Telemetry</h3>
+            <p>Engineered servo actuation, water sensor calibration, and real-time NoSQL cloud synchronization.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="sec-kicker" style="color: #c084fc;">// 05. SYSTEM PARAMETERS</div>
+          <h2>ARCHITECTURAL PRINCIPLES</h2>
+          <p style="margin-top: 6px;">Core methodologies applied across software, enterprise workflows, and hardware builds:</p>
+
+          <div class="principles-grid">
+            <div class="p-box">
+              <strong>01. CLEAN TOPOLOGY</strong>
+              <span>Strict separation of UI, business logic, and data layers.</span>
+            </div>
+            <div class="p-box">
+              <strong>02. BPMN PRECISION</strong>
+              <span>Standardized workflow gateways and deterministic states.</span>
+            </div>
+            <div class="p-box">
+              <strong>03. REAL-TIME SYNC</strong>
+              <span>Low-latency cloud telemetry for remote hardware control.</span>
+            </div>
+            <div class="p-box">
+              <strong>04. DISCIPLINED EXECUTION</strong>
+              <span>Structured, analytical troubleshooting and consistent iteration.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-strip">
+          <div>
+            <div style="font-weight: 800; color: #fff;">READY FOR DEPLOYMENT</div>
+            <div style="font-family: monospace; font-size: 12px; color: var(--muted);">Open for IS / Systems Analyst / IoT Dev roles</div>
+          </div>
+          <a href="mailto:raymond.silayan@example.com" class="btn-cyan btn-link">TRANSMIT MSG</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PROJECT MODAL -->
+  <div id="project-modal" class="modal-backdrop">
+    <div class="modal-panel">
+      <button class="btn-ghost modal-close" onclick="closeProjectModal()">[ X ]</button>
+      <div id="modal-tag" class="sec-kicker"></div>
+      <h3 id="modal-title" style="font-size: 22px; color: #fff; margin: 6px 0 10px;"></h3>
+      <p id="modal-desc" style="color: var(--text); font-size: 14px;"></p>
+      <div class="spec-box">
+        <div style="color: var(--cyan); font-weight: 700;">// SYSTEM ARCHITECTURE &amp; STACK:</div>
+        <ul id="modal-specs"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div id="edit-modal" class="modal-backdrop">
+    <div class="modal-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="color: var(--cyan); font-family: monospace;">MODIFY TELEMETRY DATA</h3>
+        <button class="btn-ghost" onclick="toggleEditModal()">[ CLOSE ]</button>
+      </div>
+      <div class="field">
+        <label>FULL NAME</label>
+        <input id="input-name" type="text" value="RAYMOND GHEE C. SILAYAN" />
+      </div>
+      <div class="field">
+        <label>EMAIL ADDRESS</label>
+        <input id="input-email" type="email" value="raymond.silayan@example.com" />
+      </div>
+      <div class="field">
+        <label>LOCATION</label>
+        <input id="input-location" type="text" value="Binangonan, Rizal, PH" />
+      </div>
+      <div class="field">
+        <label>EXECUTIVE SUMMARY</label>
+        <textarea id="input-bio" rows="3">Systems-oriented Information Systems builder specializing in Enterprise Resource Planning (ERP), 3-Tier System Architecture, and real-time ESP32 + Firebase IoT ecosystems.</textarea>
+      </div>
+      <div style="text-align: right;">
+        <button class="btn-cyan" onclick="saveProfileEdits()">APPLY CHANGES</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Starfield Canvas
+    const canvas = /** @type {HTMLCanvasElement | null} */ (document.getElementById('cosmos-canvas'));
+    const ctx = canvas ? canvas.getContext('2d') : null;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    /** @type {Star[]} */
+    let stars = [];
+    /** @type {{ x: number | null, y: number | null }} */
+    let pointer = { x: null, y: null };
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      if (canvas) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    window.addEventListener('mousemove', (e) => {
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+    });
+
+    class Star {
+      constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.r = 1;
+        this.vx = 0;
+        this.vy = 0;
+        this.color = '#00f5d4';
+        this.alpha = 0.6;
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.r = Math.random() * 1.7 + 0.4;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        const palette = ['#00f5d4', '#c084fc', '#f72585', '#ffffff'];
+        this.color = palette[Math.floor(Math.random() * palette.length)];
+        this.alpha = Math.random() * 0.65 + 0.25;
+      }
+      step() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+          this.reset();
+        }
+      }
+      draw() {
+        if (!ctx) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.alpha;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 95; i++) stars.push(new Star());
+
+    function loopCosmos() {
+      if (ctx) {
+        ctx.clearRect(0, 0, width, height);
+        for (let i = 0; i < stars.length; i++) {
+          stars[i].step();
+          stars[i].draw();
+
+          if (pointer.x !== null && pointer.y !== null) {
+            const dx = stars[i].x - pointer.x;
+            const dy = stars[i].y - pointer.y;
+            const d = Math.hypot(dx, dy);
+            if (d < 130) {
+              ctx.beginPath();
+              ctx.strokeStyle = '#00f5d4';
+              ctx.globalAlpha = (1 - d / 130) * 0.35;
+              ctx.lineWidth = 0.8;
+              ctx.moveTo(stars[i].x, stars[i].y);
+              ctx.lineTo(pointer.x, pointer.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      requestAnimationFrame(loopCosmos);
+    }
+    loopCosmos();
+
+    // Typewriter
+    const titles = [
+      "ENTERPRISE SYSTEMS ARCHITECT",
+      "IoT & ESP32 HARDWARE DEVELOPER",
+      "ERP & BPMN WORKFLOW ANALYST",
+      "FIREBASE CLOUD INTEGRATOR"
+    ];
+    let tIdx = 0, cIdx = 0, deleting = false;
+    const typeTarget = document.getElementById('typewriter');
+
+    function runTypewriter() {
+      if (!typeTarget) return;
+      const word = titles[tIdx];
+      typeTarget.textContent = deleting ? word.slice(0, cIdx--) : word.slice(0, cIdx++);
+      let wait = deleting ? 45 : 85;
+      if (!deleting && cIdx === word.length + 1) {
+        deleting = true;
+        wait = 1600;
+      } else if (deleting && cIdx === 0) {
+        deleting = false;
+        tIdx = (tIdx + 1) % titles.length;
+        wait = 350;
+      }
+      setTimeout(runTypewriter, wait);
+    }
+    runTypewriter();
+
+    // Skills
+    const skills = [
+      { name: "Enterprise Resource Planning (ERP)", cat: "enterprise", level: 92, tag: "CORE" },
+      { name: "3-Tier System Architecture", cat: "enterprise", level: 90, tag: "DESIGN" },
+      { name: "BPMN 2.0 Process Modeling", cat: "enterprise", level: 88, tag: "WORKFLOW" },
+      { name: "ESP32 Microcontroller & Sensors", cat: "iot", level: 89, tag: "HARDWARE" },
+      { name: "Servo Actuation & Telemetry", cat: "iot", level: 85, tag: "EMBEDDED" },
+      { name: "Firebase Realtime Database", cat: "web", level: 91, tag: "CLOUD" },
+      { name: "Admin Dashboard Architecture", cat: "web", level: 87, tag: "UI/SYS" },
+      { name: "Business & Statistical Analytics", cat: "enterprise", level: 86, tag: "DATA" },
+      { name: "HTML5 / CSS3 / JavaScript", cat: "web", level: 88, tag: "FRONTEND" }
+    ];
+
+    /** @param {string} [filter='all'] */
+    function renderSkills(filter = 'all') {
+      const grid = document.getElementById('skills-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const list = filter === 'all' ? skills : skills.filter(item => item.cat === filter);
+
+      list.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <div class="card-top">
+            <strong style="color:#fff; font-family:sans-serif; font-size:15px;">${item.name}</strong>
+            <span class="badge">${item.tag}</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" data-level="${item.level}%"></div>
+          </div>
+          <div class="bar-meta">
+            <span>EFFICIENCY</span>
+            <span>${item.level}%</span>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+
+      setTimeout(() => {
+        document.querySelectorAll('.bar-fill').forEach(el => {
+          const bar = /** @type {HTMLElement} */ (el);
+          const lvl = bar.getAttribute('data-level');
+          if (lvl) bar.style.width = lvl;
+        });
+      }, 60);
+    }
+    renderSkills();
+
+    /** @param {string} category */
+    function filterSkills(category) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        const b = /** @type {HTMLElement} */ (btn);
+        if (b.dataset.cat === category) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+      renderSkills(category);
+    }
+
+    // Projects Modal
+    const projects = [
+      {
+        tag: "SYS-01 // IoT HARDWARE & CLOUD",
+        title: "IoT Smart Pet Feeder & Water Dispenser",
+        desc: "Automated pet care hardware-software prototype engineered to execute scheduled feeding intervals and monitor water reservoir levels from a remote web interface.",
+        specs: [
+          "ESP32 microcontroller with Wi-Fi telemetry",
+          "Servo actuator dispense mechanism + water level sensor",
+          "Firebase Realtime Database for instant remote triggers",
+          "Web dashboard showing water percentage and schedule status"
+        ]
+      },
+      {
+        tag: "SYS-02 // ENTERPRISE WEB INTERFACE",
+        title: "TACHYONS Admin Control Interface",
+        desc: "Browser-based administrative command dashboard for managing custom system sitemaps, voucher codes, promotional pricing, and archive logs.",
+        specs: [
+          "Custom sitemap and navigation structure",
+          "Voucher code and promotional pricing rules",
+          "Structured archive logs for system auditing",
+          "Clean, low-clutter operational layout"
+        ]
+      },
+      {
+        tag: "SYS-03 // ENTERPRISE RESOURCE PLANNING",
+        title: "Healthcare Operational 3-Tier ERP Model",
+        desc: "Enterprise systems architecture blueprint separating Presentation, Business Logic, and Database layers with BPMN 2.0 workflow gateways.",
+        specs: [
+          "Presentation tier for operational users",
+          "Business logic tier with BPMN 2.0 gateways and ERP rules",
+          "Database tier for normalized operational records",
+          "Supplementary ERP module specifications"
+        ]
+      }
+    ];
+
+    /** @param {number} idx */
+    function openProjectModal(idx) {
+      const p = projects[idx];
+      if (!p) return;
+      const tagEl = document.getElementById('modal-tag');
+      const titleEl = document.getElementById('modal-title');
+      const descEl = document.getElementById('modal-desc');
+      const specsEl = document.getElementById('modal-specs');
+      const modal = document.getElementById('project-modal');
+
+      if (tagEl) tagEl.textContent = p.tag;
+      if (titleEl) titleEl.textContent = p.title;
+      if (descEl) descEl.textContent = p.desc;
+      if (specsEl) specsEl.innerHTML = p.specs.map(s => `<li>${s}</li>`).join('');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeProjectModal() {
+      const modal = document.getElementById('project-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    // Edit Modal
+    function toggleEditModal() {
+      const modal = document.getElementById('edit-modal');
+      if (modal) modal.classList.toggle('open');
+    }
+
+    function saveProfileEdits() {
+      const nameInp = /** @type {HTMLInputElement | null} */ (document.getElementById('input-name'));
+      const emailInp = /** @type {HTMLInputElement | null} */ (document.getElementById('input-email'));
+      const locInp = /** @type {HTMLInputElement | null} */ (document.getElementById('input-location'));
+      const bioInp = /** @type {HTMLTextAreaElement | null} */ (document.getElementById('input-bio'));
+
+      const nameVal = nameInp ? nameInp.value : '';
+      const emailVal = emailInp ? emailInp.value : '';
+      const locVal = locInp ? locInp.value : '';
+      const bioVal = bioInp ? bioInp.value : '';
+
+      const dispName = document.getElementById('display-name');
+      const dispEmail = /** @type {HTMLAnchorElement | null} */ (document.getElementById('display-email'));
+      const dispLoc = document.getElementById('display-location');
+      const dispBio = document.getElementById('display-bio');
+
+      if (dispName) dispName.textContent = nameVal;
+      if (dispEmail) {
+        dispEmail.textContent = '✉️ ' + emailVal;
+        dispEmail.href = 'mailto:' + emailVal;
+      }
+      if (dispLoc) dispLoc.textContent = '📍 ' + locVal;
+      if (dispBio) dispBio.textContent = bioVal;
+
+      toggleEditModal();
+    }
+  </script>
+</body>
+</html>
